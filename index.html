@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DesignOSINT - Global Database</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .tab-content { display: none; }
+        .tab-content.active { display: block; }
+        .brand-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-900 font-sans min-h-screen">
+
+    <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-[1600px] mx-auto px-4 py-3 flex justify-between items-center">
+            <div class="flex items-center gap-4">
+                <h1 class="text-lg font-bold tracking-tighter border-r border-slate-700 pr-4">DesignOSINT <span class="font-light text-slate-400 text-xs">v4.0 Global</span></h1>
+                <div class="flex gap-2">
+                    <button onclick="filterRegion('ALL')" class="reg-btn px-3 py-1 text-xs rounded bg-slate-700">TOUT</button>
+                    <button onclick="filterRegion('EU')" class="reg-btn px-3 py-1 text-xs rounded hover:bg-slate-700">EUROPE</button>
+                    <button onclick="filterRegion('AMER')" class="reg-btn px-3 py-1 text-xs rounded hover:bg-slate-700">AMÉRIQUES</button>
+                    <button onclick="filterRegion('ASIA')" class="reg-btn px-3 py-1 text-xs rounded hover:bg-slate-700">ASIE</button>
+                </div>
+            </div>
+            <div class="flex gap-4 items-center">
+                <button onclick="switchTab('osint')" class="text-xs hover:text-indigo-400 transition">RECHERCHE GLOBALE</button>
+                <button onclick="switchTab('templates')" class="text-xs hover:text-indigo-400 transition">MODÈLES</button>
+                <button onclick="addBrand()" class="bg-indigo-600 px-3 py-1 rounded text-xs font-bold hover:bg-indigo-500 transition">+ AJOUTER</button>
+            </div>
+        </div>
+    </nav>
+
+    <main class="max-w-[1600px] mx-auto px-4 py-6">
+
+        <div id="main-view" class="tab-content active">
+            <div id="display-grid" class="brand-grid">
+                </div>
+        </div>
+
+        <div id="osint" class="tab-content max-w-4xl mx-auto">
+            <div class="bg-white p-8 rounded shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold mb-4">Recherche Booléenne Avancée</h2>
+                <p class="text-slate-600 mb-6 text-sm">Générez une requête Google Dork pour trouver tous les décideurs de votre base de données en un clic.</p>
+                
+                <div class="space-y-4">
+                    <div class="p-4 bg-slate-50 rounded border border-slate-200">
+                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requête Directeurs Design (Europe)</p>
+                        <button onclick="runGlobalSearch('EU')" class="w-full bg-slate-800 text-white py-2 rounded text-sm hover:bg-black transition">Lancer la recherche Europe ↗</button>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded border border-slate-200">
+                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requête Directeurs Design (USA/Americas)</p>
+                        <button onclick="runGlobalSearch('AMER')" class="w-full bg-slate-800 text-white py-2 rounded text-sm hover:bg-black transition">Lancer la recherche Amérique ↗</button>
+                    </div>
+                    <div class="p-4 bg-slate-50 rounded border border-slate-200">
+                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requête Directeurs Design (Asie)</p>
+                        <button onclick="runGlobalSearch('ASIA')" class="w-full bg-slate-800 text-white py-2 rounded text-sm hover:bg-black transition">Lancer la recherche Asie ↗</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="templates" class="tab-content max-w-4xl mx-auto">
+            <div class="bg-white p-8 rounded shadow-sm border border-slate-200">
+                <h2 class="text-2xl font-bold mb-6">Cold Email Templates</h2>
+                <div class="space-y-6">
+                    <div class="border-l-4 border-indigo-500 pl-4">
+                        <h3 class="font-bold text-slate-800">1. Approche Portfolio Spontanée</h3>
+                        <p class="text-xs text-slate-400 mb-2 font-mono">Objet : Candidature [Titre] - [Prénom Nom] - Portfolio</p>
+                        <pre class="bg-slate-50 p-4 rounded text-sm whitespace-pre-wrap">Bonjour [Nom du décideur],
+Je suis avec attention le travail de [Marque]. En tant que designer [Spécialité], mon approche se concentre sur [Force]. Je souhaiterais apporter cette expertise à votre équipe.
+Mon portfolio : [Lien]
+Seriez-vous ouvert à un court échange ?</pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        // --- DATABASE MONDIALE ---
+        const GLOBAL_DATABASE = [
+            // EUROPE
+            { name: "Renault Group", region: "EU", url: "https://jobs.renaultgroup.com/" },
+            { name: "Alpine", region: "EU", url: "https://jobs.renaultgroup.com/" },
+            { name: "Peugeot", region: "EU", url: "https://careers.stellantis.com/" },
+            { name: "Citroën", region: "EU", url: "https://careers.stellantis.com/" },
+            { name: "DS Automobiles", region: "EU", url: "https://careers.stellantis.com/" },
+            { name: "Fiat", region: "EU", url: "https://careers.stellantis.com/" },
+            { name: "Alfa Romeo", region: "EU", url: "https://careers.stellantis.com/" },
+            { name: "Maserati", region: "EU", url: "https://careers.stellantis.com/" },
+            { name: "Volkswagen", region: "EU", url: "https://www.volkswagen-karriere.de/" },
+            { name: "Audi", region: "EU", url: "https://www.audi.com/en/careers.html" },
+            { name: "Porsche", region: "EU", url: "https://jobs.porsche.com/" },
+            { name: "Lamborghini", region: "EU", url: "https://www.lamborghini.com/en-en/careers" },
+            { name: "Bentley", region: "EU", url: "https://www.bentleymotors.com/en/about-bentley/careers.html" },
+            { name: "BMW Group", region: "EU", url: "https://www.bmwgroup.jobs/" },
+            { name: "Mini", region: "EU", url: "https://www.bmwgroup.jobs/" },
+            { name: "Rolls-Royce", region: "EU", url: "https://www.bmwgroup.jobs/" },
+            { name: "Mercedes-Benz", region: "EU", url: "https://group.mercedes-benz.com/careers/" },
+            { name: "Volvo Cars", region: "EU", url: "https://jobs.volvocars.com/" },
+            { name: "Polestar", region: "EU", url: "https://about.polestar.com/careers/" },
+            { name: "Ferrari", region: "EU", url: "https://www.ferrari.com/en-EN/corporate/career" },
+            { name: "McLaren", region: "EU", url: "https://cars.mclaren.com/en/careers" },
+            { name: "Aston Martin", region: "EU", url: "https://www.astonmartin.com/en/careers" },
+            { name: "Pininfarina", region: "EU", url: "https://pininfarina.it/en/careers/" },
+            { name: "Italdesign", region: "EU", url: "https://www.italdesign.it/careers/" },
+            { name: "Kiska", region: "EU", url: "https://kiska.com/careers/" },
+            { name: "Rimac", region: "EU", url: "https://www.rimac-automobili.com/careers/" },
+
+            // AMERICAS
+            { name: "Tesla", region: "AMER", url: "https://www.tesla.com/careers" },
+            { name: "Ford", region: "AMER", url: "https://careers.ford.com/" },
+            { name: "Lincoln", region: "AMER", url: "https://careers.ford.com/" },
+            { name: "Chevrolet", region: "AMER", url: "https://search-careers.gm.com/" },
+            { name: "Cadillac", region: "AMER", url: "https://search-careers.gm.com/" },
+            { name: "GMC", region: "AMER", url: "https://search-careers.gm.com/" },
+            { name: "Rivian", region: "AMER", url: "https://rivian.com/careers" },
+            { name: "Lucid Motors", region: "AMER", url: "https://lucidmotors.com/careers" },
+            { name: "Calty Design", region: "AMER", url: "https://www.caltydesign.com/careers/" },
+            { name: "Honda R&D US", region: "AMER", url: "https://honda.com/careers" },
+            { name: "Nissan Design America", region: "AMER", url: "https://www.nissanmotor.jobs/americas/" },
+            { name: "Hyundai Design NA", region: "AMER", url: "https://careers.hyundaiusa.com/" },
+            { name: "Canoo", region: "AMER", url: "https://www.canoo.com/careers/" },
+
+            // ASIA
+            { name: "Toyota Global", region: "ASIA", url: "https://global.toyota/en/company/career/" },
+            { name: "Lexus", region: "ASIA", url: "https://global.toyota/en/company/career/" },
+            { name: "Honda Global", region: "ASIA", url: "https://global.honda/en/careers/" },
+            { name: "Nissan Global", region: "ASIA", url: "https://www.nissanmotor.jobs/global/" },
+            { name: "Hyundai Global", region: "ASIA", url: "https://www.hyundai.com/worldwide/en/company/careers" },
+            { name: "Kia Global", region: "ASIA", url: "https://www.kia.com/worldwide/about-kia/careers.do" },
+            { name: "Genesis", region: "ASIA", url: "https://www.hyundai.com/worldwide/en/company/careers" },
+            { name: "Mazda", region: "ASIA", url: "https://www.mazda.com/en/careers/" },
+            { name: "Subaru", region: "ASIA", url: "https://www.subaru.co.jp/en/recruit/" },
+            { name: "Geely Design", region: "ASIA", url: "https://careers.geely.com/" },
+            { name: "Zeekr", region: "ASIA", url: "https://careers.geely.com/" },
+            { name: "NIO", region: "ASIA", url: "https://www.nio.com/careers" },
+            { name: "BYD", region: "ASIA", url: "https://en.byd.com/careers/" },
+            { name: "XPeng", region: "ASIA", url: "https://heyxpeng.com/careers" },
+            { name: "SAIC Motor", region: "ASIA", url: "https://www.saicmotor.com/english/careers/index.shtml" },
+            { name: "Tata Motors", region: "ASIA", url: "https://www.tatamotors.com/careers/" }
+        ];
+
+        let userStudios = JSON.parse(localStorage.getItem('osint_v4_data')) || GLOBAL_DATABASE;
+        let currentRegion = 'ALL';
+
+        function saveData() {
+            localStorage.setItem('osint_v4_data', JSON.stringify(userStudios));
+            render();
+        }
+
+        function switchTab(tabId) {
+            document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
+            document.getElementById(tabId === 'studios' ? 'main-view' : tabId).classList.add('active');
+        }
+
+        function filterRegion(reg) {
+            currentRegion = reg;
+            document.querySelectorAll('.reg-btn').forEach(b => b.classList.remove('bg-slate-700'));
+            event.target.classList.add('bg-slate-700');
+            switchTab('studios');
+            render();
+        }
+
+        function addBrand() {
+            const name = prompt("Nom de la marque :");
+            if (!name) return;
+            const url = prompt("URL portail RH :");
+            const region = prompt("Région (EU, AMER, ASIA) :", "EU").toUpperCase();
+            userStudios.push({ name, url, region });
+            saveData();
+        }
+
+        function deleteBrand(id) {
+            if(confirm("Supprimer ?")) {
+                userStudios.splice(id, 1);
+                saveData();
+            }
+        }
+
+        function openLinkedIn(name) {
+            const clean = name.split(' ')[0]; // On prend le premier mot pour optimiser la recherche
+            const query = `site:linkedin.com/in ("Head of Design" OR "Design Director" OR "Chief Designer") "${clean}"`;
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+        }
+
+        function runGlobalSearch(reg) {
+            const filtered = userStudios.filter(s => s.region === reg);
+            const names = filtered.map(s => `"${s.name.split(' ')[0]}"`).join(' OR ');
+            const query = `site:linkedin.com/in ("Head of Design" OR "Design Director") (${names})`;
+            window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
+        }
+
+        function render() {
+            const grid = document.getElementById('display-grid');
+            grid.innerHTML = '';
+
+            const filtered = currentRegion === 'ALL' 
+                ? userStudios 
+                : userStudios.filter(s => s.region === currentRegion);
+
+            filtered.forEach((s, idx) => {
+                const card = document.createElement('div');
+                card.className = "bg-white border border-slate-200 p-3 rounded hover:border-indigo-400 transition group relative";
+                card.innerHTML = `
+                    <button onclick="deleteBrand(${idx})" class="absolute top-1 right-1 text-[10px] text-slate-300 hover:text-red-500 opacity-0 group-hover:opacity-100 transition">✕</button>
+                    <div class="flex flex-col h-full justify-between">
+                        <div>
+                            <h3 class="text-sm font-bold truncate mb-1 text-slate-800">${s.name}</h3>
+                            <a href="${s.url}" target="_blank" class="text-[10px] text-indigo-500 hover:underline block mb-3 uppercase tracking-tighter">Portail RH ↗</a>
+                        </div>
+                        <button onclick="openLinkedIn('${s.name}')" class="w-full bg-slate-50 border border-slate-200 py-1 rounded text-[10px] font-bold hover:bg-slate-100 transition uppercase tracking-widest text-slate-600">
+                            LinkedIn
+                        </button>
+                    </div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        // Init
+        render();
+    </script>
+</body>
+</html>
