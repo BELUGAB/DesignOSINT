@@ -13,10 +13,12 @@
 </head>
 <body class="bg-slate-100 text-slate-900 font-sans min-h-screen">
 
+    <!-- Navbar -->
     <nav class="bg-slate-900 text-white shadow-lg sticky top-0 z-50">
-        <div class="max-w-[1600px] mx-auto px-4 py-3 flex justify-between items-center">
+        <div class="max-w-[1600px] mx-auto px-4 py-3 flex flex-wrap justify-between items-center gap-y-2">
+            
             <div class="flex items-center gap-4">
-                <h1 class="text-lg font-bold tracking-tighter border-r border-slate-700 pr-4">DesignOSINT <span class="font-light text-slate-400 text-xs">v4.0 Global</span></h1>
+                <h1 class="text-lg font-bold tracking-tighter border-r border-slate-700 pr-4">DesignOSINT <span class="font-light text-slate-400 text-xs">v5.0</span></h1>
                 <div class="flex gap-2">
                     <button onclick="filterRegion('ALL')" class="reg-btn px-3 py-1 text-xs rounded bg-slate-700">TOUT</button>
                     <button onclick="filterRegion('EU')" class="reg-btn px-3 py-1 text-xs rounded hover:bg-slate-700">EUROPE</button>
@@ -24,54 +26,86 @@
                     <button onclick="filterRegion('ASIA')" class="reg-btn px-3 py-1 text-xs rounded hover:bg-slate-700">ASIE</button>
                 </div>
             </div>
+
+            <!-- NOUVEAU : Sélecteur de cible -->
+            <div class="flex items-center gap-3 bg-slate-800 px-3 py-1.5 rounded border border-slate-700">
+                <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider">Cible :</span>
+                <select id="role-selector" onchange="updateTargetUI()" class="bg-transparent text-white text-xs font-semibold focus:outline-none cursor-pointer">
+                    <option value="directors">👑 Directeurs & Managers</option>
+                    <option value="designers">✏️ Designers (Ext/Int/CMF)</option>
+                    <option value="modelers">💻 Modeleurs (3D/Clay)</option>
+                    <option value="advanced">🧠 Avancé / HMI / UX</option>
+                    <option value="hr">🤝 Ressources Humaines (RH)</option>
+                </select>
+            </div>
+
             <div class="flex gap-4 items-center">
-                <button onclick="switchTab('osint')" class="text-xs hover:text-indigo-400 transition">RECHERCHE GLOBALE</button>
-                <button onclick="switchTab('templates')" class="text-xs hover:text-indigo-400 transition">MODÈLES</button>
-                <button onclick="addBrand()" class="bg-indigo-600 px-3 py-1 rounded text-xs font-bold hover:bg-indigo-500 transition">+ AJOUTER</button>
+                <button onclick="switchTab('osint')" class="text-xs font-bold text-slate-300 hover:text-indigo-400 transition">RECHERCHE GLOBALE</button>
+                <button onclick="switchTab('templates')" class="text-xs font-bold text-slate-300 hover:text-indigo-400 transition">MODÈLES</button>
+                <button onclick="addBrand()" class="bg-indigo-600 px-3 py-1 rounded text-xs font-bold hover:bg-indigo-500 transition shadow">+ AJOUTER</button>
             </div>
         </div>
     </nav>
 
+    <!-- Main Content -->
     <main class="max-w-[1600px] mx-auto px-4 py-6">
 
+        <!-- TAB 1 : Grille des marques -->
         <div id="main-view" class="tab-content active">
+            <div class="mb-4 flex justify-between items-end">
+                <p class="text-sm text-slate-500">Sélectionnez le métier ciblé dans la barre du haut, puis cliquez sur "LinkedIn" pour générer la recherche.</p>
+            </div>
             <div id="display-grid" class="brand-grid">
-                </div>
+                <!-- Injecté par JS -->
+            </div>
         </div>
 
+        <!-- TAB 2 : Recherche Globale -->
         <div id="osint" class="tab-content max-w-4xl mx-auto">
             <div class="bg-white p-8 rounded shadow-sm border border-slate-200">
-                <h2 class="text-2xl font-bold mb-4">Recherche Booléenne Avancée</h2>
-                <p class="text-slate-600 mb-6 text-sm">Générez une requête Google Dork pour trouver tous les décideurs de votre base de données en un clic.</p>
+                <h2 class="text-2xl font-bold mb-4">Recherche Booléenne Groupée</h2>
+                <p class="text-slate-600 mb-6 text-sm">Générez une requête pour trouver tous les <strong id="global-target-name" class="text-indigo-600">Directeurs & Managers</strong> de votre base de données en un clic.</p>
                 
                 <div class="space-y-4">
                     <div class="p-4 bg-slate-50 rounded border border-slate-200">
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requête Directeurs Design (Europe)</p>
-                        <button onclick="runGlobalSearch('EU')" class="w-full bg-slate-800 text-white py-2 rounded text-sm hover:bg-black transition">Lancer la recherche Europe ↗</button>
+                        <button onclick="runGlobalSearch('EU')" class="w-full bg-slate-800 text-white py-3 rounded text-sm font-bold hover:bg-black transition flex justify-between px-6">
+                            <span>🇪🇺 Lancer la recherche EUROPE</span> <span>↗</span>
+                        </button>
                     </div>
                     <div class="p-4 bg-slate-50 rounded border border-slate-200">
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requête Directeurs Design (USA/Americas)</p>
-                        <button onclick="runGlobalSearch('AMER')" class="w-full bg-slate-800 text-white py-2 rounded text-sm hover:bg-black transition">Lancer la recherche Amérique ↗</button>
+                        <button onclick="runGlobalSearch('AMER')" class="w-full bg-slate-800 text-white py-3 rounded text-sm font-bold hover:bg-black transition flex justify-between px-6">
+                            <span>🇺🇸 Lancer la recherche AMÉRIQUES</span> <span>↗</span>
+                        </button>
                     </div>
                     <div class="p-4 bg-slate-50 rounded border border-slate-200">
-                        <p class="text-xs font-bold text-slate-400 uppercase mb-2">Requête Directeurs Design (Asie)</p>
-                        <button onclick="runGlobalSearch('ASIA')" class="w-full bg-slate-800 text-white py-2 rounded text-sm hover:bg-black transition">Lancer la recherche Asie ↗</button>
+                        <button onclick="runGlobalSearch('ASIA')" class="w-full bg-slate-800 text-white py-3 rounded text-sm font-bold hover:bg-black transition flex justify-between px-6">
+                            <span>🌏 Lancer la recherche ASIE</span> <span>↗</span>
+                        </button>
                     </div>
                 </div>
             </div>
         </div>
 
+        <!-- TAB 3 : Modèles -->
         <div id="templates" class="tab-content max-w-4xl mx-auto">
             <div class="bg-white p-8 rounded shadow-sm border border-slate-200">
                 <h2 class="text-2xl font-bold mb-6">Cold Email Templates</h2>
                 <div class="space-y-6">
                     <div class="border-l-4 border-indigo-500 pl-4">
-                        <h3 class="font-bold text-slate-800">1. Approche Portfolio Spontanée</h3>
+                        <h3 class="font-bold text-slate-800">1. Approche Portfolio Spontanée (Directeur/Manager)</h3>
                         <p class="text-xs text-slate-400 mb-2 font-mono">Objet : Candidature [Titre] - [Prénom Nom] - Portfolio</p>
-                        <pre class="bg-slate-50 p-4 rounded text-sm whitespace-pre-wrap">Bonjour [Nom du décideur],
+                        <pre class="bg-slate-50 p-4 rounded text-sm whitespace-pre-wrap">Bonjour [Nom],
 Je suis avec attention le travail de [Marque]. En tant que designer [Spécialité], mon approche se concentre sur [Force]. Je souhaiterais apporter cette expertise à votre équipe.
 Mon portfolio : [Lien]
 Seriez-vous ouvert à un court échange ?</pre>
+                    </div>
+                    <div class="border-l-4 border-emerald-500 pl-4">
+                        <h3 class="font-bold text-slate-800">2. Relance ou prise de contact RH</h3>
+                        <p class="text-xs text-slate-400 mb-2 font-mono">Objet : Offre de [Titre] - Candidature [Prénom Nom]</p>
+                        <pre class="bg-slate-50 p-4 rounded text-sm whitespace-pre-wrap">Bonjour [Nom],
+Je me permets de vous contacter suite à l'offre de [Titre] chez [Marque]. Ayant [X] années d'expérience en [Spécialité], mon profil correspond à vos critères actuels.
+Vous trouverez mon travail ici : [Lien]
+Pourrions-nous en discuter rapidement ?</pre>
                     </div>
                 </div>
             </div>
@@ -80,9 +114,18 @@ Seriez-vous ouvert à un court échange ?</pre>
     </main>
 
     <script>
-        // --- DATABASE MONDIALE (V4 PRO - ~200 Marques & Studios) ---
+        // --- LES GROUPES DE RECHERCHE (BOOLÉENS) ---
+        const TARGET_ROLES = {
+            directors: `"Head of Design" OR "Design Director" OR "Chief Designer" OR "Design Manager"`,
+            designers: `"Exterior Designer" OR "Interior Designer" OR "Automotive Designer" OR "Transportation Designer" OR "Color and Trim"`,
+            modelers: `"Clay Modeler" OR "Digital Modeler" OR "Alias Modeler" OR "CAS Modeler" OR "Class A" OR "Surfacing"`,
+            advanced: `"Concept Designer" OR "Advanced Designer" OR "HMI Designer" OR "UI/UX Designer" OR "Innovation Designer"`,
+            hr: `"Talent Acquisition" OR "Recruiter" OR "Human Resources" OR "HR" OR "Recrutement"`
+        };
+
+        // --- DATABASE MONDIALE (~200 Marques & Studios) ---
         const GLOBAL_DATABASE = [
-            // EUROPE (Constructeurs, Supercars, Studios indépendants)
+            // EUROPE 
             { name: "Renault Group", region: "EU", url: "https://jobs.renaultgroup.com/" },
             { name: "Alpine", region: "EU", url: "https://jobs.renaultgroup.com/" },
             { name: "Dacia", region: "EU", url: "https://careers.dacia.com/" },
@@ -121,15 +164,15 @@ Seriez-vous ouvert à un court échange ?</pre>
             { name: "Pagani", region: "EU", url: "https://www.pagani.com/careers/" },
             { name: "Lotus", region: "EU", url: "https://us.lotuscars.com/careers" },
             { name: "Morgan Motor", region: "EU", url: "https://www.morgan-motor.com/careers/" },
-            { name: "Ineos Automotive", region: "EU", url: "https://ineosautomotive.com/careers/" },
-            { name: "Gordon Murray Automotive", region: "EU", url: "https://gordonmurrayautomotive.com/careers" },
+            { name: "Ineos", region: "EU", url: "https://ineosautomotive.com/careers/" },
+            { name: "Gordon Murray", region: "EU", url: "https://gordonmurrayautomotive.com/careers" },
             { name: "Pininfarina", region: "EU", url: "https://pininfarina.it/en/careers/" },
             { name: "Italdesign", region: "EU", url: "https://www.italdesign.it/careers/" },
             { name: "Bertone", region: "EU", url: "https://bertone.it/" },
             { name: "Zagato", region: "EU", url: "https://www.zagato.it/" },
             { name: "Touring Superleggera", region: "EU", url: "https://www.touringsuperleggera.eu/" },
             { name: "GFG Style", region: "EU", url: "https://www.gfgstyle.it/" },
-            { name: "Icona Design Group", region: "EU", url: "https://icona-designgroup.com/careers/" },
+            { name: "Icona Design", region: "EU", url: "https://icona-designgroup.com/careers/" },
             { name: "Granstudio", region: "EU", url: "https://granstudio.com/careers" },
             { name: "Kiska", region: "EU", url: "https://kiska.com/careers/" },
             { name: "Technicon Design", region: "EU", url: "https://www.technicondesign.com/" },
@@ -141,15 +184,15 @@ Seriez-vous ouvert à un court échange ?</pre>
             { name: "Forvia", region: "EU", url: "https://careers.forvia.com/" },
             { name: "Scania", region: "EU", url: "https://www.scania.com/group/en/home/career.html" },
             { name: "Volvo Trucks", region: "EU", url: "https://www.volvogroup.com/en/careers.html" },
-            { name: "MAN Truck & Bus", region: "EU", url: "https://www.man.eu/corporate/en/careers/careers.html" },
+            { name: "MAN Truck", region: "EU", url: "https://www.man.eu/corporate/en/careers/careers.html" },
             { name: "KTM", region: "EU", url: "https://careers.ktm.com/" },
-            { name: "Triumph Motorcycles", region: "EU", url: "https://www.triumphmotorcycles.co.uk/careers" },
+            { name: "Triumph", region: "EU", url: "https://www.triumphmotorcycles.co.uk/careers" },
             { name: "Ducati", region: "EU", url: "https://www.ducati.com/ww/en/corporate/career" },
-            { name: "Piaggio Group", region: "EU", url: "https://www.piaggiogroup.com/en/careers" },
+            { name: "Piaggio", region: "EU", url: "https://www.piaggiogroup.com/en/careers" },
             { name: "Rimac", region: "EU", url: "https://www.rimac-automobili.com/careers/" },
             { name: "Microlino", region: "EU", url: "https://microlino-car.com/en/jobs" },
 
-            // AMERICAS (US Big 3, EV Startups, Studios satellites)
+            // AMERICAS 
             { name: "Ford", region: "AMER", url: "https://careers.ford.com/" },
             { name: "Lincoln", region: "AMER", url: "https://careers.ford.com/" },
             { name: "Chevrolet", region: "AMER", url: "https://search-careers.gm.com/" },
@@ -165,52 +208,52 @@ Seriez-vous ouvert à un court échange ?</pre>
             { name: "Lucid Motors", region: "AMER", url: "https://lucidmotors.com/careers" },
             { name: "Faraday Future", region: "AMER", url: "https://www.ff.com/us/careers/" },
             { name: "Karma Automotive", region: "AMER", url: "https://www.karmaautomotive.com/careers" },
-            { name: "Mullen Automotive", region: "AMER", url: "https://www.mullenusa.com/careers" },
+            { name: "Mullen", region: "AMER", url: "https://www.mullenusa.com/careers" },
             { name: "Canoo", region: "AMER", url: "https://www.canoo.com/careers/" },
             { name: "Scout Motors", region: "AMER", url: "https://www.scoutmotors.com/careers" },
             { name: "Czinger", region: "AMER", url: "https://www.czinger.com/careers" },
             { name: "SSC North America", region: "AMER", url: "https://www.sscnorthamerica.com/" },
-            { name: "Hennessey Performance", region: "AMER", url: "https://www.hennesseyperformance.com/" },
+            { name: "Hennessey", region: "AMER", url: "https://www.hennesseyperformance.com/" },
             { name: "DeLorean", region: "AMER", url: "https://delorean.com/" },
-            { name: "Aptera Motors", region: "AMER", url: "https://aptera.us/careers/" },
-            { name: "Bollinger Motors", region: "AMER", url: "https://bollingermotors.com/careers/" },
-            { name: "Calty Design (Toyota US)", region: "AMER", url: "https://www.caltydesign.com/careers/" },
-            { name: "Nissan Design America", region: "AMER", url: "https://www.nissanmotor.jobs/americas/" },
+            { name: "Aptera", region: "AMER", url: "https://aptera.us/careers/" },
+            { name: "Bollinger", region: "AMER", url: "https://bollingermotors.com/careers/" },
+            { name: "Calty Design", region: "AMER", url: "https://www.caltydesign.com/careers/" },
+            { name: "Nissan Design NA", region: "AMER", url: "https://www.nissanmotor.jobs/americas/" },
             { name: "Honda R&D US", region: "AMER", url: "https://honda.com/careers" },
             { name: "Hyundai Design NA", region: "AMER", url: "https://careers.hyundaiusa.com/" },
-            { name: "VW Design Center CA", region: "AMER", url: "https://www.vw.com/en/careers.html" },
-            { name: "Designworks (BMW US)", region: "AMER", url: "https://www.bmwgroupdesignworks.com/careers/" },
+            { name: "VW Design Center", region: "AMER", url: "https://www.vw.com/en/careers.html" },
+            { name: "Designworks", region: "AMER", url: "https://www.bmwgroupdesignworks.com/careers/" },
             { name: "Polaris", region: "AMER", url: "https://www.polaris.com/en-us/careers/" },
             { name: "Indian Motorcycle", region: "AMER", url: "https://www.polaris.com/en-us/careers/" },
             { name: "Harley-Davidson", region: "AMER", url: "https://careers.harley-davidson.com/" },
-            { name: "BRP (Can-Am/Sea-Doo)", region: "AMER", url: "https://careers.brp.com/" },
+            { name: "BRP", region: "AMER", url: "https://careers.brp.com/" },
             { name: "Zero Motorcycles", region: "AMER", url: "https://www.zeromotorcycles.com/careers" },
             { name: "Freightliner", region: "AMER", url: "https://daimlertruck.com/career/" },
             { name: "Peterbilt", region: "AMER", url: "https://www.peterbilt.com/careers" },
             { name: "Navistar", region: "AMER", url: "https://www.navistar.com/careers" },
             { name: "Aria Group", region: "AMER", url: "https://aria-group.com/careers/" },
             { name: "Visteon", region: "AMER", url: "https://www.visteon.com/careers/" },
-            { name: "Lear Corporation", region: "AMER", url: "https://jobs.lear.com/" },
+            { name: "Lear", region: "AMER", url: "https://jobs.lear.com/" },
 
-            // ASIA (Géants Japonais, Coréens, explosion EV Chinoise et studios locaux)
-            { name: "Toyota Global", region: "ASIA", url: "https://global.toyota/en/company/career/" },
+            // ASIA 
+            { name: "Toyota", region: "ASIA", url: "https://global.toyota/en/company/career/" },
             { name: "Lexus", region: "ASIA", url: "https://global.toyota/en/company/career/" },
-            { name: "Honda Global", region: "ASIA", url: "https://global.honda/en/careers/" },
+            { name: "Honda", region: "ASIA", url: "https://global.honda/en/careers/" },
             { name: "Acura", region: "ASIA", url: "https://global.honda/en/careers/" },
-            { name: "Nissan Global", region: "ASIA", url: "https://www.nissanmotor.jobs/global/" },
+            { name: "Nissan", region: "ASIA", url: "https://www.nissanmotor.jobs/global/" },
             { name: "Infiniti", region: "ASIA", url: "https://www.nissanmotor.jobs/global/" },
-            { name: "Mitsubishi Motors", region: "ASIA", url: "https://www.mitsubishi-motors.com/en/sustainability/people/" },
+            { name: "Mitsubishi", region: "ASIA", url: "https://www.mitsubishi-motors.com/en/sustainability/people/" },
             { name: "Mazda", region: "ASIA", url: "https://www.mazda.com/en/careers/" },
             { name: "Subaru", region: "ASIA", url: "https://www.subaru.co.jp/en/recruit/" },
             { name: "Suzuki", region: "ASIA", url: "https://www.globalsuzuki.com/corporate/" },
             { name: "Isuzu", region: "ASIA", url: "https://www.isuzu.co.jp/world/careers/" },
-            { name: "Yamaha Motor", region: "ASIA", url: "https://global.yamaha-motor.com/about/careers/" },
+            { name: "Yamaha", region: "ASIA", url: "https://global.yamaha-motor.com/about/careers/" },
             { name: "Kawasaki", region: "ASIA", url: "https://global.kawasaki.com/en/corp/career/" },
-            { name: "Hyundai Global", region: "ASIA", url: "https://www.hyundai.com/worldwide/en/company/careers" },
-            { name: "Kia Global", region: "ASIA", url: "https://www.kia.com/worldwide/about-kia/careers.do" },
+            { name: "Hyundai", region: "ASIA", url: "https://www.hyundai.com/worldwide/en/company/careers" },
+            { name: "Kia", region: "ASIA", url: "https://www.kia.com/worldwide/about-kia/careers.do" },
             { name: "Genesis", region: "ASIA", url: "https://www.hyundai.com/worldwide/en/company/careers" },
-            { name: "KG Mobility (SsangYong)", region: "ASIA", url: "https://www.kg-mobility.com/en/" },
-            { name: "Geely Design", region: "ASIA", url: "https://careers.geely.com/" },
+            { name: "KG Mobility", region: "ASIA", url: "https://www.kg-mobility.com/en/" },
+            { name: "Geely", region: "ASIA", url: "https://careers.geely.com/" },
             { name: "Zeekr", region: "ASIA", url: "https://careers.geely.com/" },
             { name: "Lynk & Co", region: "ASIA", url: "https://careers.geely.com/" },
             { name: "NIO", region: "ASIA", url: "https://www.nio.com/careers" },
@@ -220,32 +263,32 @@ Seriez-vous ouvert à un court échange ?</pre>
             { name: "XPeng", region: "ASIA", url: "https://heyxpeng.com/careers" },
             { name: "Li Auto", region: "ASIA", url: "https://www.lixiang.com/" },
             { name: "Xiaomi EV", region: "ASIA", url: "https://www.mi.com/global/about/careers/" },
-            { name: "SAIC Motor", region: "ASIA", url: "https://www.saicmotor.com/english/careers/index.shtml" },
+            { name: "SAIC", region: "ASIA", url: "https://www.saicmotor.com/english/careers/index.shtml" },
             { name: "MG Motor", region: "ASIA", url: "https://www.saicmotor.com/english/careers/index.shtml" },
             { name: "Roewe", region: "ASIA", url: "https://www.saicmotor.com/english/careers/index.shtml" },
             { name: "IM Motors", region: "ASIA", url: "https://www.immotors.com/" },
-            { name: "Changan Automobile", region: "ASIA", url: "https://www.globalchangan.com/" },
+            { name: "Changan", region: "ASIA", url: "https://www.globalchangan.com/" },
             { name: "Avatr", region: "ASIA", url: "https://www.avatr.com/en" },
             { name: "Chery", region: "ASIA", url: "https://www.cheryinternational.com/" },
             { name: "Exeed", region: "ASIA", url: "https://www.exeedcars.com/" },
-            { name: "Great Wall Motors (GWM)", region: "ASIA", url: "https://www.gwm-global.com/" },
+            { name: "Great Wall Motors", region: "ASIA", url: "https://www.gwm-global.com/" },
             { name: "Haval", region: "ASIA", url: "https://www.gwm-global.com/" },
             { name: "Ora", region: "ASIA", url: "https://www.gwm-global.com/" },
             { name: "Tank", region: "ASIA", url: "https://www.gwm-global.com/" },
-            { name: "FAW Group", region: "ASIA", url: "http://www.faw.com/" },
+            { name: "FAW", region: "ASIA", url: "http://www.faw.com/" },
             { name: "Hongqi", region: "ASIA", url: "https://www.hongqi-auto.com/" },
             { name: "Dongfeng", region: "ASIA", url: "http://www.dongfeng-global.com/" },
             { name: "Voyah", region: "ASIA", url: "https://www.voyah.com/" },
-            { name: "BAIC Group", region: "ASIA", url: "https://www.baicglobal.com/" },
+            { name: "BAIC", region: "ASIA", url: "https://www.baicglobal.com/" },
             { name: "Arcfox", region: "ASIA", url: "https://www.arcfox.com/" },
-            { name: "GAC Group", region: "ASIA", url: "https://www.gac-motor.com/" },
+            { name: "GAC", region: "ASIA", url: "https://www.gac-motor.com/" },
             { name: "Aion", region: "ASIA", url: "https://www.aionauto.com/" },
             { name: "Leapmotor", region: "ASIA", url: "https://www.leapmotor.com/" },
-            { name: "Hozon (Neta)", region: "ASIA", url: "https://www.hozonauto.com/en/" },
+            { name: "Hozon", region: "ASIA", url: "https://www.hozonauto.com/en/" },
             { name: "HiPhi", region: "ASIA", url: "https://www.hiphi.com/" },
             { name: "JiYue", region: "ASIA", url: "https://www.jiyue-auto.com/" },
             { name: "Tata Motors", region: "ASIA", url: "https://www.tatamotors.com/careers/" },
-            { name: "Mahindra & Mahindra", region: "ASIA", url: "https://jobs.mahindra.com/" },
+            { name: "Mahindra", region: "ASIA", url: "https://jobs.mahindra.com/" },
             { name: "Maruti Suzuki", region: "ASIA", url: "https://www.marutisuzuki.com/corporate/careers" },
             { name: "Hero MotoCorp", region: "ASIA", url: "https://jobs.heromotocorp.com/" },
             { name: "Bajaj Auto", region: "ASIA", url: "https://www.bajajauto.com/careers" },
@@ -254,16 +297,15 @@ Seriez-vous ouvert à un court échange ?</pre>
             { name: "VinFast", region: "ASIA", url: "https://vinfastauto.com/vn_en/careers" },
             { name: "Proton", region: "ASIA", url: "https://www.proton.com/en/corporate/careers" },
             { name: "Perodua", region: "ASIA", url: "https://www.perodua.com.my/corporate/careers.html" },
-            { name: "Icona Design (Shanghai)", region: "ASIA", url: "https://icona-designgroup.com/careers/" },
             { name: "Launch Design", region: "ASIA", url: "http://www.launchdesign.com.cn/" },
             { name: "IAT Automobile", region: "ASIA", url: "http://www.iat-auto.com/" }
         ];
 
-        let userStudios = JSON.parse(localStorage.getItem('osint_v4_data')) || GLOBAL_DATABASE;
+        let userStudios = JSON.parse(localStorage.getItem('osint_v5_data')) || GLOBAL_DATABASE;
         let currentRegion = 'ALL';
 
         function saveData() {
-            localStorage.setItem('osint_v4_data', JSON.stringify(userStudios));
+            localStorage.setItem('osint_v5_data', JSON.stringify(userStudios));
             render();
         }
 
@@ -278,6 +320,13 @@ Seriez-vous ouvert à un court échange ?</pre>
             event.target.classList.add('bg-slate-700');
             switchTab('studios');
             render();
+        }
+
+        // Met à jour les textes de l'interface quand on change la cible dans le dropdown
+        function updateTargetUI() {
+            const selector = document.getElementById('role-selector');
+            const targetName = selector.options[selector.selectedIndex].text.replace(/👑|✏️|💻|🧠|🤝/g, '').trim();
+            document.getElementById('global-target-name').innerText = targetName;
         }
 
         function addBrand() {
@@ -296,16 +345,29 @@ Seriez-vous ouvert à un court échange ?</pre>
             }
         }
 
+        function getSelectedRoleQuery() {
+            const roleKey = document.getElementById('role-selector').value;
+            return TARGET_ROLES[roleKey];
+        }
+
         function openLinkedIn(name) {
-            const clean = name.split(' ')[0]; // On prend le premier mot pour optimiser la recherche
-            const query = `site:linkedin.com/in ("Head of Design" OR "Design Director" OR "Chief Designer") "${clean}"`;
+            const clean = name.split(' ')[0]; // Optimisation : prend le premier mot (ex: Renault Group -> Renault)
+            const roleQuery = getSelectedRoleQuery();
+            const query = `site:linkedin.com/in (${roleQuery}) "${clean}"`;
             window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
         }
 
         function runGlobalSearch(reg) {
             const filtered = userStudios.filter(s => s.region === reg);
+            if(filtered.length === 0) {
+                alert("Aucune marque dans cette région.");
+                return;
+            }
             const names = filtered.map(s => `"${s.name.split(' ')[0]}"`).join(' OR ');
-            const query = `site:linkedin.com/in ("Head of Design" OR "Design Director") (${names})`;
+            const roleQuery = getSelectedRoleQuery();
+            
+            // La requête combinée
+            const query = `site:linkedin.com/in (${roleQuery}) (${names})`;
             window.open(`https://www.google.com/search?q=${encodeURIComponent(query)}`, '_blank');
         }
 
@@ -327,8 +389,8 @@ Seriez-vous ouvert à un court échange ?</pre>
                             <h3 class="text-sm font-bold truncate mb-1 text-slate-800">${s.name}</h3>
                             <a href="${s.url}" target="_blank" class="text-[10px] text-indigo-500 hover:underline block mb-3 uppercase tracking-tighter">Portail RH ↗</a>
                         </div>
-                        <button onclick="openLinkedIn('${s.name}')" class="w-full bg-slate-50 border border-slate-200 py-1 rounded text-[10px] font-bold hover:bg-slate-100 transition uppercase tracking-widest text-slate-600">
-                            LinkedIn
+                        <button onclick="openLinkedIn('${s.name}')" class="w-full bg-slate-50 border border-slate-200 py-1 rounded text-[10px] font-bold hover:bg-slate-100 transition uppercase tracking-widest text-slate-600 flex justify-center items-center gap-1">
+                            <span>🔍</span> LinkedIn
                         </button>
                     </div>
                 `;
@@ -337,6 +399,7 @@ Seriez-vous ouvert à un court échange ?</pre>
         }
 
         // Init
+        updateTargetUI();
         render();
     </script>
 </body>
